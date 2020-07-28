@@ -44,21 +44,6 @@ const Home = (props) => {
                                         getLink = '/'
                                     }
 
-                                    // set color for room
-                                    let color = ''
-                                    let isGreen = false
-                                    let isRed = false
-                                    room.date.forEach(date => {
-                                        isGreen = (date.startDate === now && room.isEmpty) || isGreen
-                                        isRed = ((date.endDate === now || date.endDate - 1800000 === now) && !room.isEmpty) || isRed
-                                    })
-                                    if(isGreen) {
-                                        color = 'text-success'
-                                    }
-                                    if(isRed) {
-                                        color = 'text-danger'
-                                    }
-
                                     //set background for room
                                     let background = ''
                                     if(!room.isCleaned) {
@@ -66,6 +51,21 @@ const Home = (props) => {
                                     }
                                     if(!room.isEmpty) {
                                         background = 'bg-warning'
+                                    }
+
+                                    // set color for room
+                                    let color = ''
+                                    let isGreen = false
+                                    let isRed = false
+                                    room.date.forEach(date => {
+                                        isGreen = (date.startDate === now && room.isEmpty) || isGreen
+                                        isRed = ((date.endDate <= now || date.endDate - 1800000 <= now) && !room.isEmpty) || isRed
+                                    })
+                                    if(isGreen) {
+                                        color = 'text-success'
+                                    }
+                                    if(isRed) {
+                                        color = 'text-danger'
                                     }
 
                                     if(room.level === level) {
