@@ -1,17 +1,41 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import { Provider } from 'react-redux'
+import 'bootstrap/dist/css/bootstrap.css'
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+import { BrowserRouter } from 'react-router-dom'
+import Routes from './routes'
+import configureStore from './store/configureStore'
+import { firebase } from './firebase'
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+import { startSetBookings } from './actions/bookings'
+import { startSetRooms } from './actions/rooms'
+
+const store = configureStore()
+
+const App = (props) => {
+  return (
+    <Provider store={store}>
+      <BrowserRouter>
+        <Routes {...props}/>
+      </BrowserRouter>
+    </Provider>
+    
+  )
+}
+
+firebase.auth().onAuthStateChanged(user => {
+    store.dispatch(startSetBookings())
+    .then(() => store.dispatch(startSetRooms()))
+    .then(() => {
+      ReactDOM.render(
+          <App user={user}/>,
+        document.getElementById('root')
+      )
+    })
+  
+})
+
+
+
+
