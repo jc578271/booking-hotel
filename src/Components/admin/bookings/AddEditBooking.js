@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { uuid } from 'uuidv4'
+import { Link } from 'react-router-dom'
 import AdminLayout from '../../../Hoc/AdminLayout'
 
 import { startAddBooking, startEditBooking, startRemoveBooking } from '../../../actions/bookings'
@@ -328,7 +329,6 @@ const AddEditBooking = (props) => {
         }
         
         setFormdata(newFormdata)
-        console.log(newFormdata)
     }
 
 //================
@@ -515,6 +515,10 @@ const AddEditBooking = (props) => {
                 // EDIT BOOKING
                 props.editBooking(props.match.params.id, dataToSubmit)
                 successForm('Updated correctly')
+
+                if(formdata.checked.value === 'checked in') {
+                    checkinHandler(formdata)
+                }
             } else {
                 // ADD BOOKING
                 props.addBooking(dataToSubmit)
@@ -786,11 +790,21 @@ const AddEditBooking = (props) => {
                         Cancel
                     </button>
                     
+                    
                     {
                         formType === 'Edit booking' ?
-                            <button style={style} className="btn btn-danger" onClick={(event) => {if (window.confirm('Are you sure you wish to delete this item?')) removeHandler(event) } }>
-                                Remove
-                            </button>
+                            <>
+                                <button style={style} className="btn btn-danger" onClick={(event) => {if (window.confirm('Are you sure you wish to delete this item?')) removeHandler(event) } }>
+                                    Remove
+                                </button>
+                            </>
+                        : null
+                    }
+                    {
+                        formdata.checked.value === 'checked in'?
+                            <div>
+                                <button><Link target="_blank" to={`booking_confirm/${props.booking.id}`}>Print booking confirm</Link></button>
+                            </div>
                         : null
                     }
                     

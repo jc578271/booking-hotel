@@ -25,7 +25,8 @@
     "react-table": "^7.3.2",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
-    "uuidv4": "^6.2.0"
+    "uuidv4": "^6.2.0",
+    "written-number": "^0.9.1"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -123,7 +123,6 @@ const ServiceForm = ({ mainFormdata, setMainFormdata, booking }) => {
         const newFormdata = {...formdata}
         
         newFormdata.sum.value = newFormdata.sum.value.filter((i, index) => {
-            console.log(selectedIndexes.indexOf(index) === -1)
             return selectedIndexes.indexOf(index) === -1
         })
         
