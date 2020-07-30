@@ -21,7 +21,7 @@ const style = {
 
 const BookingBill = (props) => {
     let totalPrice = 0
-    console.log(props.booking.service)
+
     return (
         <div className="container">
             <div>
@@ -90,9 +90,11 @@ const BookingBill = (props) => {
 
                             totalPrice += price*dateRange*amount
 
+                            props.booking.service = props.booking.service ? props.booking.service : []
                             props.booking.service.forEach(service => {
                                 totalPrice += parseInt(service.price) * service.amount
                             })
+                            
 
                             return(
                                 <tr key={i}>
