@@ -19,9 +19,9 @@ const style = {
     
 }
 
-const BookingConfirm = (props) => {
+const BookingBill = (props) => {
     let totalPrice = 0
-
+    console.log(props.booking.service)
     return (
         <div className="container">
             <div>
@@ -31,7 +31,7 @@ const BookingConfirm = (props) => {
             <br></br>
             <br></br>
             
-            <h1 className="text-center">Xác nhận đặt phòng</h1>
+            <h1 className="text-center">Hóa Đơn</h1>
             <br></br>
 
             <p>Ngày: {moment().format('DD/MM/YYYY')}</p>
@@ -46,7 +46,8 @@ const BookingConfirm = (props) => {
                 <thead>
                     <tr>
                         <th style={{...style.th, width:'50px'}}>STT</th>
-                        <th style={style.th}>Hạng Phòng</th>
+                        <th style={style.th}>Hạng phòng</th>
+                        <th style={style.th}>Phòng</th>
                         <th style={style.th}>Check in</th>
                         <th style={style.th}>Check out</th>
                         <th style={style.th}>SL phòng</th>
@@ -64,29 +65,40 @@ const BookingConfirm = (props) => {
                             
                             let price
                             let amount
+                            let rooms
                             if(room.type === 'Single') {
                                 price = props.booking.singlePrice ? parseInt(props.booking.singlePrice) : 0
+                                rooms = props.booking.singleRoom
                                 amount = props.booking.singleRoom ? props.booking.singleRoom.length : 0
                             } else if(room.type === 'Twin') {
                                 price = props.booking.twinPrice ? parseInt(props.booking.twinPrice) : 0
+                                rooms = props.booking.twinRoom
                                 amount = props.booking.twinRoom ? props.booking.twinRoom.length : 0
                             } else if(room.type === 'Triple') {
                                 price = props.booking.triplePrice ? parseInt(props.booking.triplePrice) : 0
+                                rooms = props.booking.tripleRoom
                                 amount = props.booking.tripleRoom ? props.booking.tripleRoom.length : 0
                             } else if(room.type === 'Family') {
                                 price = props.booking.familyPrice ? parseInt(props.booking.familyPrice) : 0
+                                rooms = props.booking.familyRoom
                                 amount = props.booking.familyRoom ? props.booking.familyRoom.length : 0
                             } else if(room.type === 'Apartment') {
                                 price = props.booking.apartmentPrice ? parseInt(props.booking.apartmentPrice) : 0
+                                rooms = props.booking.apartmentRoom
                                 amount = props.booking.apartmentRoom ? props.booking.apartmentRoom.length : 0
                             }
 
                             totalPrice += price*dateRange*amount
 
+                            props.booking.service.forEach(service => {
+                                totalPrice += parseInt(service.price) * service.amount
+                            })
+
                             return(
                                 <tr key={i}>
                                     <td style={style.th}>{i+1}</td>
                                     <td style={{...style.th, textAlign:'left'}}>{room.type}</td>
+                                    <td style={{...style.th, textAlign:'left'}}>{rooms.map((room, i) => <span key={i}>{room.value}</span>)}</td>
                                     <td style={{...style.th, textAlign:'left'}}>{moment(selectDate.startDate).format('DD/MM/YYYY')}</td>
                                     <td style={{...style.th, textAlign:'left'}}>{moment(selectDate.endDate).format('DD/MM/YYYY')}</td>
                                     <td style={{...style.th, textAlign:'right'}}>{amount}</td>
@@ -99,11 +111,34 @@ const BookingConfirm = (props) => {
                     }
                 </tbody>
             </table>
+            <br></br>
+            <table style={style.table}>
+                <tr>
+                    <td style={style.th}><strong>Dịch vụ</strong></td>
+                    <td style={style.th} >
+                        {
+                            props.booking.service.map((service, i) => <tr className="d-flex justify-content-between" key={i}>
+                                <td>{service.service}</td>
+                                <td >{service.price}</td>
+                            </tr>)
+                        }
+                    </td>
+                </tr>
+                
+            </table>
             <div className="d-flex justify-content-between" style={{padding:'5px 5px 0 5px', height:'30px'}}>
                 <p><strong>Tổng giá trị:</strong></p>
-                <p><strong>{totalPrice}</strong></p>
+                <p>{totalPrice}</p>
             </div>
-            <p style={{padding:'0 5px'}}><strong>Bằng chữ: </strong>{toWordS(totalPrice, {lang: 'vi'})} đồng</p>
+            <div className="d-flex justify-content-between" style={{padding:'5px 5px 0 5px', height:'30px'}}>
+                <p><strong>Đã cọc:</strong></p>
+                <p>{props.booking.deposit}</p>
+            </div>
+            <div className="d-flex justify-content-between" style={{padding:'5px 5px 0 5px', height:'30px'}}>
+                <p><strong>Còn lại:</strong></p>
+                <p><strong>{totalPrice - props.booking.deposit}</strong></p>
+            </div>
+            <p style={{padding:'0 5px'}}><strong>Bằng chữ: </strong>{toWordS(totalPrice - props.booking.deposit, {lang: 'vi'})} đồng</p>
             <p style={{padding:'0 5px'}}><strong>Chú ý: </strong>{props.booking.note}</p>
             <br></br>
             <br></br>
@@ -134,4 +169,4 @@ const mapStateToProps = (state, props) => ({
     })
 })
 
-export default connect(mapStateToProps)(BookingConfirm)
+export default connect(mapStateToProps)(BookingBill)

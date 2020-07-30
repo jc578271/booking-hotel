@@ -30,7 +30,10 @@ export const startAddBooking = (bookingData = {}) => {
             apartmentPrice = '',
             checked = '',
             id = '',
-            service= []
+            service= [],
+            totalPrice = '',
+            deposit = '',
+            phone = ''
         } = bookingData
         const booking = {
             name, 
@@ -52,7 +55,10 @@ export const startAddBooking = (bookingData = {}) => {
             apartmentPrice,
             checked,
             id,
-            service
+            service,
+            totalPrice,
+            deposit,
+            phone
         }
 
         return firebaseBookings.child(id).set(booking).then((ref) => {

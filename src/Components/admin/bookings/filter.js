@@ -38,7 +38,7 @@ const BookingFilter = ({ bookings, setFilterBookings, setFilterdata }) => {
         },
         startDate: {
             element: 'date',
-            value: moment().startOf('month').valueOf(),
+            value: '',
             config: {
                 label: 'Start date'
             },
@@ -51,7 +51,7 @@ const BookingFilter = ({ bookings, setFilterBookings, setFilterdata }) => {
         },
         endDate: {
             element: 'date',
-            value: moment().endOf('month').valueOf(),
+            value: '',
             config: {
                 label: 'End date'
             },

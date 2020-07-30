@@ -283,7 +283,41 @@ const AddEditBooking = (props) => {
             value: [],
             validation: {},
             valid: true
+        },
+        totalPrice:{
+            value:'',
+            validation:{},
+            valid: true
+        },
+        deposit:{
+            element: 'input',
+            value: '',
+            config: {
+                label: 'Customer\'s deposit',
+                type: 'number'
+            },
+            validation: {
+                required: false
+            },
+            valid: true,
+            validationMessage: '',
+            showLabel: true
+        },
+        phone:{
+            element: 'input',
+            value: '',
+            config: {
+                label: 'Customer\'s phone number',
+                type: 'number'
+            },
+            validation: {
+                required: false
+            },
+            valid: true,
+            validationMessage: '',
+            showLabel: true
         }
+        
     })
 
     const typeRoomOptions= [
@@ -451,6 +485,9 @@ const AddEditBooking = (props) => {
         newFormdata.totalRooms.value = newFormdata.singleRoom.value.concat(newFormdata.twinRoom.value, newFormdata.tripleRoom.value, newFormdata.familyRoom.value, newFormdata.apartmentRoom.value)
         newFormdata.totalRooms.valid = newFormdata.totalRooms.value.length !== 0
 
+        //set totalPrice
+        newFormdata.totalPrice.value = handleTotalPrice(newFormdata)
+
         getRooms(false, newFormdata)
         setFormError(false)
         setFormdata(newFormdata)
@@ -540,17 +577,17 @@ const AddEditBooking = (props) => {
 //===================
 // handleTotalPrice
 //===================
-    const handleTotalPrice = () => {
-        let days = momentRange.range(formdata.startDate.value ,formdata.endDate.value).snapTo('days').diff('days')
+    const handleTotalPrice = (data) => {
+        let days = momentRange.range(data.startDate.value ,data.endDate.value).snapTo('days').diff('days')
         days = days !== 0 ? days : 1
-        const price =  formdata.singlePrice.value * formdata.singleRoom.value.length
-                    + formdata.twinPrice.value * formdata.twinRoom.value.length
-                    + formdata.triplePrice.value * formdata.tripleRoom.value.length
-                    + formdata.familyPrice.value * formdata.familyRoom.value.length
-                    + formdata.apartmentPrice.value * formdata.apartmentRoom.value.length
+        const price =  data.singlePrice.value * data.singleRoom.value.length
+                    + data.twinPrice.value * data.twinRoom.value.length
+                    + data.triplePrice.value * data.tripleRoom.value.length
+                    + data.familyPrice.value * data.familyRoom.value.length
+                    + data.apartmentPrice.value * data.apartmentRoom.value.length
 
         let servicePrice = 0
-        formdata.service.value.forEach(service => {
+        data.service.value.forEach(service => {
             servicePrice += service.amount * service.price
         })
 
@@ -583,7 +620,7 @@ const AddEditBooking = (props) => {
         selectedRooms(data).forEach(room => {
             room.isEmpty = false
             room.owner = data.name.value
-            room.price = handleTotalPrice()
+            room.price = handleTotalPrice(data)
             room.linkBooking = data.id.value
         })
 
@@ -717,6 +754,18 @@ const AddEditBooking = (props) => {
                                 change={(element) => updateForm(element)}
                             />
 
+                            <FormField
+                                id={'phone'}
+                                formdata={formdata.phone}
+                                change={(element) => updateForm(element)}
+                            />
+
+                            <FormField
+                                id={'deposit'}
+                                formdata={formdata.deposit}
+                                change={(element) => updateForm(element)}
+                            />
+
                             <div style={{display:'flex', flexDirection: 'row'}}>
 
                                 <FormField
@@ -756,9 +805,16 @@ const AddEditBooking = (props) => {
                             booking={props.booking}
                         />
 
-                        <div style={{width:'700px'}} className="alert alert-success">
-                            <strong>Total price: </strong>
-                            {handleTotalPrice()}
+                        <div style={{width:'700px'}} className="alert alert-success d-flex justify-content-between">
+                            <div>
+                                <strong>Total price: </strong>
+                                {handleTotalPrice(formdata)}
+                            </div>
+
+                            <div>
+                                <strong>Remaining price: </strong>
+                                {handleTotalPrice(formdata) - formdata.deposit.value}
+                            </div>
                         </div>                        
 
                         <div className="text-success"><strong>{formSuccess}</strong></div>
@@ -797,15 +853,20 @@ const AddEditBooking = (props) => {
                                 <button style={style} className="btn btn-danger" onClick={(event) => {if (window.confirm('Are you sure you wish to delete this item?')) removeHandler(event) } }>
                                     Remove
                                 </button>
+                                {
+                                    formdata.checked.value !== 'checked out' ?
+                                        <div style={{marginBottom:'5px'}}>
+                                            <button className="btn btn-info "><Link className="text-light" style={{textDecoration:'none'}} target="_blank" to={`booking_confirm/${props.booking.id}`}>Print booking confirm</Link></button>
+                                        </div>
+                                    : null
+                                }
                             </>
                         : null
                     }
                     {
-                        formdata.checked.value === 'checked in'?
-                            <div>
-                                <button><Link target="_blank" to={`booking_confirm/${props.booking.id}`}>Print booking confirm</Link></button>
-                            </div>
-                        : null
+                        formdata.checked.value === 'checked in' ?
+                            <button className="btn btn-info "><Link className="text-light" style={{textDecoration:'none'}} target="_blank" to={`booking_bill/${props.booking.id}`}>Print booking bill</Link></button>
+                        :null
                     }
                     
                 </div>

@@ -2,16 +2,18 @@ import React, {useState, useEffect} from 'react'
 import FormField from '../../ui/formFields'
 
 import ReactDataGrid from 'react-data-grid'
+import { connect } from 'react-redux'
 
-const ServiceForm = ({ mainFormdata, setMainFormdata, booking }) => {
+const ServiceForm = ({ services, mainFormdata, setMainFormdata, booking }) => {
     const [selectedIndexes, setSelectedIndexes] = useState([])
     const [formdata, setFormdata] = useState({
         service:{
-            element: 'input',
+            element: 'select',
             value: '',
             config: {
                 label: 'Service',
-                type: 'text'
+                type: 'select',
+                options: []
             },
             validation: {
                 required: false
@@ -22,7 +24,7 @@ const ServiceForm = ({ mainFormdata, setMainFormdata, booking }) => {
         },
         amount: {
             element: 'input',
-            value: '',
+            value: 1,
             config: {
                 label: 'Amount',
                 type: 'number'
@@ -55,21 +57,45 @@ const ServiceForm = ({ mainFormdata, setMainFormdata, booking }) => {
         }
     })
 
+    const getServices = (data) => {
+        const newFormdata = {...formdata}
+        const serviceOptions = []
+        services.forEach((service) => {
+            serviceOptions.push({
+                key: service.id,
+                value: service.description,
+                price: service.price
+            })
+        })
+
+        data.service.config.options = serviceOptions
+        data.service.config.options.forEach((service) => {
+            if(service.key === data.service.value) {
+                newFormdata.price.value = service.price
+            }
+           
+        })
+        
+        setFormdata(newFormdata)
+    }
+
     useEffect(() => {
         if(booking) {
             const newFormdata = {...formdata}
             newFormdata.sum.value = booking.service ? booking.service : []
             setFormdata(newFormdata)
         }
+
+        getServices(formdata)
     }, [])
 
     const updateForm = (element) => {
         const newFormdata = {...formdata}
         const newElement = {...newFormdata[element.id]}
-
         newElement.value = element.event.target.value
         newFormdata[element.id] = newElement
-
+        
+        getServices(newFormdata)
         setFormdata(newFormdata)
     }
 
@@ -77,11 +103,17 @@ const ServiceForm = ({ mainFormdata, setMainFormdata, booking }) => {
         event.preventDefault()
 
         const newFormdata = {...formdata}
-        newFormdata.sum.value.push({
-            service: formdata.service.value,
-            amount: formdata.amount.value,
-            price: formdata.price.value
-        })
+
+        const selectService = newFormdata.service.config.options.find((service) => service.key === newFormdata.service.value)
+
+        if(selectService) {
+            newFormdata.sum.value.push({
+                service: selectService.value,
+                amount: formdata.amount.value,
+                price: formdata.price.value
+            })
+        }
+        
         setFormdata(newFormdata)
 
         // set on mainFormdata
@@ -188,4 +220,8 @@ const ServiceForm = ({ mainFormdata, setMainFormdata, booking }) => {
     )
 }
 
-export default ServiceForm
+const mapStateToProps = (state) => ({
+    services: state.services
+})
+
+export default connect(mapStateToProps)(ServiceForm)

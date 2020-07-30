@@ -10,6 +10,7 @@ import { firebase } from './firebase'
 
 import { startSetBookings } from './actions/bookings'
 import { startSetRooms } from './actions/rooms'
+import { startSetServices } from './actions/services'
 
 const store = configureStore()
 
@@ -27,6 +28,7 @@ const App = (props) => {
 firebase.auth().onAuthStateChanged(user => {
     store.dispatch(startSetBookings())
     .then(() => store.dispatch(startSetRooms()))
+    .then(() => store.dispatch(startSetServices()))
     .then(() => {
       ReactDOM.render(
           <App user={user}/>,

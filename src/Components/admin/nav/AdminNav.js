@@ -21,6 +21,10 @@ const AdminLayout = () => {
         {
             title: 'Add Room',
             linkTo: '/room/add_room'
+        },
+        {
+            title: 'Add Service',
+            linkTo: '/service'
         }
     ]
 
