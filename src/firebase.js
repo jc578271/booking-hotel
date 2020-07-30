@@ -5,14 +5,14 @@ import 'firebase/auth'
 import 'firebase/storage'
 
 const config = {
-    apiKey: "AIzaSyCVjomV4tY3Atu6DoIC-LcTdOQ434S0EPk",
-    authDomain: "booking-hotel-dcaf8.firebaseapp.com",
-    databaseURL: "https://booking-hotel-dcaf8.firebaseio.com",
-    projectId: "booking-hotel-dcaf8",
-    storageBucket: "booking-hotel-dcaf8.appspot.com",
-    messagingSenderId: "716967256329",
-    appId: "1:716967256329:web:e591699ce91a383a8bb3d8",
-    measurementId: "G-5RLZQ2NGB9"
+    apiKey: "AIzaSyCLtMLmiOdt8eUBGur5gyVI5J9FqApOGNI",
+    authDomain: "booking-hotel-hoang.firebaseapp.com",
+    databaseURL: "https://booking-hotel-hoang.firebaseio.com",
+    projectId: "booking-hotel-hoang",
+    storageBucket: "booking-hotel-hoang.appspot.com",
+    messagingSenderId: "126892028911",
+    appId: "1:126892028911:web:628da5c6b7ddd592793c1a",
+    measurementId: "G-CX2XGYH7DX"
 };
 
 firebase.initializeApp(config)
