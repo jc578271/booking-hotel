@@ -122,7 +122,7 @@ const ServiceForm = ({ services, mainFormdata, setMainFormdata, booking }) => {
         setMainFormdata(newMainFormdata)
 
         newFormdata.service.value = ''
-        newFormdata.amount.value = ''
+        newFormdata.amount.value = 1
         newFormdata.price.value = ''
     }
 

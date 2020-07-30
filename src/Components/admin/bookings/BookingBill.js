@@ -115,11 +115,12 @@ const BookingBill = (props) => {
             <table style={style.table}>
                 <tr>
                     <td style={style.th}><strong>Dịch vụ</strong></td>
-                    <td style={style.th} >
+                    <td style={{...style.th, width:'80%'}} >
                         {
-                            props.booking.service.map((service, i) => <tr className="d-flex justify-content-between" key={i}>
-                                <td>{service.service}</td>
-                                <td >{service.price}</td>
+                            props.booking.service.map((service, i) => <tr style={{width:'100%'}} key={i}>
+                                <td style={{width:'80%', textAlign:'left'}}>{service.service}</td>
+                                <td style={{textAlign:'right'}}>{service.amount}</td>
+                                <td style={{width:'20%',textAlign:'right'}}>{service.price}</td>
                             </tr>)
                         }
                     </td>
@@ -165,7 +166,7 @@ const BookingBill = (props) => {
 const mapStateToProps = (state, props) => ({
     booking: state.bookings.find(booking => booking.id === props.match.params.id),
     rooms: state.rooms.filter(room => {
-        return room.date.find(date => date.bookingid === props.match.params.id)
+        return room.date ? room.date.find(date => date.bookingid === props.match.params.id) : false
     })
 })
 

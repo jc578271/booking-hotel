@@ -103,7 +103,15 @@ const BookingConfirm = (props) => {
                 <p><strong>Tổng giá trị:</strong></p>
                 <p><strong>{totalPrice}</strong></p>
             </div>
-            <p style={{padding:'0 5px'}}><strong>Bằng chữ: </strong>{toWordS(totalPrice, {lang: 'vi'})} đồng</p>
+            <div className="d-flex justify-content-between" style={{padding:'5px 5px 0 5px', height:'30px'}}>
+                <p><strong>Đã cọc:</strong></p>
+                <p>{props.booking.deposit}</p>
+            </div>
+            <div className="d-flex justify-content-between" style={{padding:'5px 5px 0 5px', height:'30px'}}>
+                <p><strong>Còn lại:</strong></p>
+                <p><strong>{totalPrice - props.booking.deposit}</strong></p>
+            </div>
+            <p style={{padding:'0 5px'}}><strong>Bằng chữ: </strong>{toWordS(totalPrice - props.booking.deposit, {lang: 'vi'})} đồng</p>
             <p style={{padding:'0 5px'}}><strong>Chú ý: </strong>{props.booking.note}</p>
             <br></br>
             <br></br>
@@ -130,7 +138,7 @@ const BookingConfirm = (props) => {
 const mapStateToProps = (state, props) => ({
     booking: state.bookings.find(booking => booking.id === props.match.params.id),
     rooms: state.rooms.filter(room => {
-        return room.date.find(date => date.bookingid === props.match.params.id)
+        return room.date ? room.date.find(date => date.bookingid === props.match.params.id) : false
     })
 })
 
