@@ -112,11 +112,11 @@ export const SignIn = (props) => {
                         : null
                     }
 
-                    <button className="btn btn-primary" onClick={(event) => submitForm(event)}>Log in</button>
+                    <button style={{marginBottom:'10px'}} className="btn btn-primary" onClick={(event) => submitForm(event)}>Log in</button>
 
                 </form>
-
-                <button onClick={loginWithGoogle}>Login with google</button>
+                <p>Or</p>
+                <button className="btn btn-danger" onClick={loginWithGoogle}>Login with google</button>
 
             </div>
         </div>
