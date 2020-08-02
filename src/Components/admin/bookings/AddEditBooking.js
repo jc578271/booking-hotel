@@ -865,7 +865,7 @@ const AddEditBooking = (props) => {
                     }
                     {
                         formdata.checked.value === 'checked in' ?
-                            <button className="btn btn-info "><Link className="text-light" style={{textDecoration:'none'}} target="_blank" to={`booking_bill/${props.booking.id}`}>Print booking bill</Link></button>
+                            <button className="btn btn-info "><Link className="text-light" style={{textDecoration:'none'}} target="_blank" to={`booking_bill/${formdata.id.value}`}>Print booking bill</Link></button>
                         :null
                     }
                     

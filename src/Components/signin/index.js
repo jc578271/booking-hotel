@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
+import { connect } from 'react-redux'
 import FormFeild from '../ui/formFields'
 import { validate } from '../ui/misc'
-import { firebase } from '../../firebase'
+import { startLogin, startLoginWithGoogle } from '../../actions/auth'
 
 export const SignIn = (props) => {
     const [formError, setFormError] = useState(false)
@@ -65,11 +66,7 @@ export const SignIn = (props) => {
 
         // *
         if(formIsValid) {
-            firebase.auth()
-            .signInWithEmailAndPassword(
-                dataToSubmit.email,
-                dataToSubmit.password
-            ).then(() => {
+            props.startLogin(dataToSubmit.email, dataToSubmit.password).then(() => {
                 props.history.push('/')
             }).catch((err) => {
                 setFormError(true)
@@ -78,6 +75,10 @@ export const SignIn = (props) => {
         } else {
             setFormError(true)
         }
+    }
+
+    const loginWithGoogle = () => {
+        props.startLoginWithGoogle()
     }
     
     
@@ -115,7 +116,16 @@ export const SignIn = (props) => {
 
                 </form>
 
+                <button onClick={loginWithGoogle}>Login with google</button>
+
             </div>
         </div>
     )
 }
+
+const mapDispatchToProps = (dispatch) => ({
+    startLogin: (email, password) => dispatch(startLogin(email, password)),
+    startLoginWithGoogle: () => dispatch(startLoginWithGoogle())
+})
+
+export default connect(undefined, mapDispatchToProps)(SignIn)

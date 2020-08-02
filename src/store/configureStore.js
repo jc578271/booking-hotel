@@ -3,6 +3,7 @@ import thunk from 'redux-thunk';
 import bookingsReducer from '../reducers/bookings'
 import roomReducer from '../reducers/rooms'
 import serviceReducer from '../reducers/services'
+import authReducer from '../reducers/auth'
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -12,7 +13,8 @@ export default () => {
         combineReducers({
             bookings: bookingsReducer,
             rooms: roomReducer,
-            services: serviceReducer
+            services: serviceReducer,
+            auth: authReducer
         }),
         composeEnhancers(applyMiddleware(thunk))
         // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()

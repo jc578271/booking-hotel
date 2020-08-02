@@ -1,4 +1,4 @@
-import { firebaseServices, firebaseDB } from "../firebase"
+import { firebaseDB } from "../firebase"
 
 // ADD_SERVICE
 export const addService = (service) => {
@@ -9,14 +9,15 @@ export const addService = (service) => {
 }
 
 export const startAddService = (serviceData = {}) => {
-    return (dispatch) => {
+    return (dispatch, getState) => {
+        const uid = getState().auth.uid
         const {
             description = '',
             price= 0
         } = serviceData
         const service = { description, price }
 
-        return firebaseServices.push(service).then((ref) => {
+        return firebaseDB.ref(`users/${uid}/services`).push(service).then((ref) => {
             dispatch(addService({
                 id: ref.key,
                 ...service
@@ -32,8 +33,9 @@ export const removeService = ({ id } = {}) => ({
 })
 
 export const startRemoveService = ({ id } = {}) => {
-    return (dispatch) => {
-        return firebaseDB.ref(`services/${id}`).remove().then(() => {
+    return (dispatch, getState) => {
+        const uid = getState().auth.uid
+        return firebaseDB.ref(`users/${uid}/services/${id}`).remove().then(() => {
             dispatch(removeService({ id }));
         })
     }
@@ -47,8 +49,9 @@ export const editService = (id, updates) => ({
 })
 
 export const startEditService = (id, updates) => {
-    return (dispatch) => {
-        return firebaseDB.ref(`services/${id}`).update(updates).then(() => {
+    return (dispatch, getState) => {
+        const uid = getState().auth.uid
+        return firebaseDB.ref(`users/${uid}/services/${id}`).update(updates).then(() => {
             dispatch(editService(id, updates));
         })
     }
@@ -61,8 +64,9 @@ export const setServices = (services) => ({
 })
 
 export const startSetServices = () => {
-    return (dispatch) => {
-        return firebaseDB.ref(`services`).once('value').then((snapshot) => {
+    return (dispatch, getState) => {
+        const uid = getState().auth.uid
+        return firebaseDB.ref(`users/${uid}/services`).once('value').then((snapshot) => {
             const services = [];
 
             snapshot.forEach((childSnapshot) => {

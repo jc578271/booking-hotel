@@ -11,6 +11,7 @@ import { firebase } from './firebase'
 import { startSetBookings } from './actions/bookings'
 import { startSetRooms } from './actions/rooms'
 import { startSetServices } from './actions/services'
+import { login, logout } from './actions/auth'
 
 const store = configureStore()
 
@@ -26,6 +27,8 @@ const App = (props) => {
 }
 
 firebase.auth().onAuthStateChanged(user => {
+  if(user) {
+    store.dispatch(login(user.uid))
     store.dispatch(startSetBookings())
     .then(() => store.dispatch(startSetRooms()))
     .then(() => store.dispatch(startSetServices()))
@@ -35,7 +38,13 @@ firebase.auth().onAuthStateChanged(user => {
         document.getElementById('root')
       )
     })
-  
+  } else {
+    store.dispatch(logout())
+    ReactDOM.render(
+      <App user={user}/>,
+    document.getElementById('root')
+  )
+  }
 })
 
 

@@ -16,16 +16,11 @@ const config = {
 };
 
 firebase.initializeApp(config)
-
+const googleAuthProdiver = new firebase.auth.GoogleAuthProvider()
 const firebaseDB = firebase.database()
-const firebaseBookings = firebaseDB.ref('bookings')
-const firebaseRooms = firebaseDB.ref('rooms')
-const firebaseServices = firebaseDB.ref('services')
 
 export {
     firebase,
-    firebaseBookings,
-    firebaseRooms,
-    firebaseServices,
+    googleAuthProdiver,
     firebaseDB
 }

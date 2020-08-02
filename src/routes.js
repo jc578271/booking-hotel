@@ -14,7 +14,7 @@ import BookingConfirm from './Components/admin/bookings/BookingConfirm'
 import BookingBill from './Components/admin/bookings/BookingBill'
 import Service from './Components/admin/serviceRoom'
 
-import {SignIn} from './Components/signin'
+import SignIn from './Components/signin'
 
 // import AddEditTest from './playground/AddEditTest'
 // import Test from './playground/datagridtest'

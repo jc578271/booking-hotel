@@ -1,4 +1,4 @@
-import { firebaseRooms, firebaseDB } from "../firebase"
+import { firebaseDB } from "../firebase"
 
 // ADD_ROOM
 export const addRoom = (room) => {
@@ -9,7 +9,8 @@ export const addRoom = (room) => {
 }
 
 export const startAddRoom = (roomData = {}) => {
-    return (dispatch) => {
+    return (dispatch, getState) => {
+        const uid = getState().auth.uid
         const {
             number = '',
             level= 0,
@@ -24,7 +25,7 @@ export const startAddRoom = (roomData = {}) => {
         } = roomData
         const room = { number, level, type, owner, service, price, isEmpty, date, linkBooking, isCleaned }
 
-        return firebaseRooms.push(room).then((ref) => {
+        return firebaseDB.ref(`users/${uid}/rooms`).push(room).then((ref) => {
             dispatch(addRoom({
                 id: ref.key,
                 ...room
@@ -40,8 +41,9 @@ export const removeRoom = ({ id } = {}) => ({
 })
 
 export const startRemoveRoom = ({ id } = {}) => {
-    return (dispatch) => {
-        return firebaseDB.ref(`rooms/${id}`).remove().then(() => {
+    return (dispatch, getState) => {
+        const uid = getState().auth.uid
+        return firebaseDB.ref(`users/${uid}/rooms/${id}`).remove().then(() => {
             dispatch(removeRoom({ id }));
         })
     }
@@ -55,8 +57,9 @@ export const editRoom = (id, updates) => ({
 })
 
 export const startEditRoom = (id, updates) => {
-    return (dispatch) => {
-        return firebaseDB.ref(`rooms/${id}`).update(updates).then(() => {
+    return (dispatch, getState) => {
+        const uid = getState().auth.uid
+        return firebaseDB.ref(`users/${uid}/rooms/${id}`).update(updates).then(() => {
             dispatch(editRoom(id, updates));
         })
     }
@@ -69,8 +72,9 @@ export const setRooms = (rooms) => ({
 })
 
 export const startSetRooms = () => {
-    return (dispatch) => {
-        return firebaseDB.ref(`rooms`).once('value').then((snapshot) => {
+    return (dispatch, getState) => {
+        const uid = getState().auth.uid
+        return firebaseDB.ref(`users/${uid}/rooms`).once('value').then((snapshot) => {
             const rooms = [];
 
             snapshot.forEach((childSnapshot) => {
